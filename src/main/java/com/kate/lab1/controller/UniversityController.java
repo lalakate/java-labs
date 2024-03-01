@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("api/v1/university")
@@ -24,7 +25,7 @@ public class UniversityController {
 
     @GetMapping
     public ResponseEntity<List<UniversityResponse>> getUniversities(@RequestParam(value = "country") String country) {
-        if (country.matches(".*\\d.*")) {
+        if (Pattern.compile("\\d").matcher(country).find()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         List<UniversityResponse> universityController = universityService.getUniversity(country);

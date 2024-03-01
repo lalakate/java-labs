@@ -24,10 +24,8 @@ public class UniversityController {
 
     @GetMapping
     public ResponseEntity<List<UniversityResponse>> getUniversities(@RequestParam(value = "country") String country) {
-        for (char i = '0'; i <= '9'; i++) {
-            if (country.indexOf(i) >= 0) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-            }
+        if (country.matches(".*\\d.*")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         List<UniversityResponse> universityController = universityService.getUniversity(country);
         return new ResponseEntity<>(universityController, HttpStatus.OK);

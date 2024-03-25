@@ -2,7 +2,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=lalakate_java-labs&metric=alert_status)](https://sonarcloud.io/summary/overall?id=lalakate_java-labs)
 
 This API provides endpoints to show list of universities filtered by country. 
-Endpoints have been implemented for the creation and management of universities, countries and students and save data to database.
+Endpoints have been implemented for the creation and management of universities, countries and students and save data to database with ManyToOne and ManyToMany relations.
 
 ## Used stack
 

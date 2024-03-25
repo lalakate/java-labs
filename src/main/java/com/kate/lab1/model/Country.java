@@ -20,6 +20,6 @@ public class Country {
     @Column
     @OneToMany
     @JoinColumn(name = "university_id")
-    @JsonIgnoreProperties(value = {"universities","country"})
+    @JsonIgnoreProperties(value = {"universities", "country"})
     private List<University> universities;
 }

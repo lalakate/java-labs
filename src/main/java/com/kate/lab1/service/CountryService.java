@@ -55,7 +55,7 @@ public class CountryService {
             return "Wrong id!";
         else {
 
-            List <University> universityList = new ArrayList<>(country.getUniversities());
+            List<University> universityList = new ArrayList<>(country.getUniversities());
             universityRepository.deleteAll(universityList);
             countryRepository.delete(country);
             return "Successfully deleted!";

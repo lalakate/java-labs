@@ -30,6 +30,6 @@ public class Student {
     private Long number;
 
     @ManyToMany(mappedBy = "students")
-    @JsonIgnoreProperties(value = {"universities","country", "students"})
+    @JsonIgnoreProperties(value = {"universities", "country", "students"})
     private List<University> universities;
 }

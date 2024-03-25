@@ -30,11 +30,11 @@ public class University {
 
     @ManyToOne
     @JoinColumn(name = "country_id")
-    @JsonIgnoreProperties(value = {"universities","country", "students"})
+    @JsonIgnoreProperties(value = {"universities", "country", "students"})
     private Country country;
 
     @ManyToMany
     @JoinTable(name = "university_student", joinColumns = @JoinColumn(name = "university_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
-    @JsonIgnoreProperties(value = {"universities","country", "students"})
+    @JsonIgnoreProperties(value = {"universities", "country", "students"})
     private List<Student> students;
 }

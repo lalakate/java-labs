@@ -99,29 +99,27 @@ public class UniversityService {
         University university = universityRepository.findById(universityId).orElse(null);
         Student student = studentRepository.findById(studentId).orElse(null);
 
-        if(university != null && student != null && !university.getStudents().contains(student)) {
+        if (university != null && student != null && !university.getStudents().contains(student)) {
             student.getUniversities().add(university);
             university.getStudents().add(student);
             studentRepository.save(student);
             universityRepository.save(university);
 
             return "Successfully added!";
-        }
-        else return "Wrong id or this student exists in university.";
+        } else return "Wrong id or this student exists in university.";
     }
 
     public String deleteStudentFromUniversity(Long universityId, Long studentId) {
         University university = universityRepository.findById(universityId).orElse(null);
         Student student = studentRepository.findById(studentId).orElse(null);
 
-        if(university != null && student != null && university.getStudents().contains(student) && student.getUniversities().contains(university)) {
+        if (university != null && student != null && university.getStudents().contains(student) && student.getUniversities().contains(university)) {
             student.getUniversities().remove(university);
             university.getStudents().remove(student);
             studentRepository.save(student);
             universityRepository.save(university);
 
             return "Successfully deleted!";
-        }
-        else return "Wrong id or this university does not contain this student.";
+        } else return "Wrong id or this university does not contain this student.";
     }
 }

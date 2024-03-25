@@ -3,7 +3,6 @@ target/
 .mvn
 mvnw
 mvnw.cmd
-application.yml
 !**/src/main/**/target/
 !**/src/test/**/target/
 

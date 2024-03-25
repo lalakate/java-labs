@@ -1,25 +1,127 @@
 package com.kate.lab1.service;
 
-import com.kate.lab1.payload.UniversityResponse;
-import org.springframework.http.ResponseEntity;
+import com.kate.lab1.model.Country;
+import com.kate.lab1.model.Student;
+import com.kate.lab1.model.University;
+import com.kate.lab1.repository.CountryRepository;
+import com.kate.lab1.repository.StudentRepository;
+import com.kate.lab1.repository.UniversityRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
+@AllArgsConstructor
 public class UniversityService {
-    public List<UniversityResponse> getUniversity(String country) {
-        String apiUrl = "http://universities.hipolabs.com/search?country={country}";
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<UniversityResponse[]> responseEntity = restTemplate.getForEntity(apiUrl, UniversityResponse[].class, country);
-        UniversityResponse[] responseBody = responseEntity.getBody();
-        if (responseBody != null && responseBody.length > 0) {
-            List<UniversityResponse> universities = new ArrayList<>();
-            Collections.addAll(universities, responseBody);
-            return universities;
-        } else return Collections.emptyList();
+    private UniversityRepository universityRepository;
+    private CountryRepository countryRepository;
+    private StudentRepository studentRepository;
+
+    public List<University> getAllUniversities() {
+        return universityRepository.findAll();
+    }
+
+    public University getUniversityById(Long id) {
+        return universityRepository.findById(id).orElse(null);
+    }
+
+    public String createUniversity(Long countryId, University university) {
+        Set<Student> uniqueStudents = new HashSet<>();
+        for (Student student : university.getStudents()) {
+            if (!uniqueStudents.add(student))
+                return "Bad request, do not share the same students in the same university";
+        }
+
+        List<Student> students = university.getStudents();
+        List<Student> managedStudents = new ArrayList<>();
+
+        for (Student student : students) {
+            Student existingStudent = studentRepository.findStudentBySurname(student.getSurname());
+
+            if (existingStudent != null) {
+                managedStudents.add(existingStudent);
+            } else {
+                studentRepository.save(student);
+                managedStudents.add(student);
+            }
+        }
+
+        Country country = countryRepository.findById(countryId).orElse(null);
+        if (country == null) {
+            return "Wrong id, operation failed!";
+        } else {
+            University newUniversity = new University();
+            newUniversity.setName(university.getName());
+            newUniversity.setDomain(university.getDomain());
+            newUniversity.setIndex(university.getIndex());
+            newUniversity.setWebPage(university.getWebPage());
+            newUniversity.setCountry(country);
+            newUniversity.setStudents(managedStudents);
+
+            country.getUniversities().add(newUniversity);
+
+            universityRepository.save(newUniversity);
+            countryRepository.save(country);
+
+            return "Successfully created!";
+        }
+    }
+
+    public String updateUniversity(Long id, University university) {
+        University newUniversity = universityRepository.findById(id).orElse(null);
+
+        if (newUniversity == null) {
+            return "Not found.";
+        } else {
+            newUniversity.setName(university.getName());
+            newUniversity.setDomain(university.getDomain());
+            newUniversity.setIndex(university.getIndex());
+            newUniversity.setWebPage(university.getWebPage());
+            newUniversity.setCountry(university.getCountry());
+            newUniversity.setStudents(university.getStudents());
+            universityRepository.save(newUniversity);
+            return "Successfully updated!";
+        }
+    }
+
+    public String deleteUniversity(Long id) {
+        Optional<University> optionalUniversity = universityRepository.findById(id);
+        if (optionalUniversity.isPresent()) {
+            universityRepository.deleteById(id);
+            return "Successfully deleted!";
+        } else {
+            return "University with id " + id + " not found";
+        }
+    }
+
+    public String addStudentToUniversity(Long universityId, Long studentId) {
+        University university = universityRepository.findById(universityId).orElse(null);
+        Student student = studentRepository.findById(studentId).orElse(null);
+
+        if(university != null && student != null && !university.getStudents().contains(student)) {
+            student.getUniversities().add(university);
+            university.getStudents().add(student);
+            studentRepository.save(student);
+            universityRepository.save(university);
+
+            return "Successfully added!";
+        }
+        else return "Wrong id or this student exists in university.";
+    }
+
+    public String deleteStudentFromUniversity(Long universityId, Long studentId) {
+        University university = universityRepository.findById(universityId).orElse(null);
+        Student student = studentRepository.findById(studentId).orElse(null);
+
+        if(university != null && student != null && university.getStudents().contains(student) && student.getUniversities().contains(university)) {
+            student.getUniversities().remove(university);
+            university.getStudents().remove(student);
+            studentRepository.save(student);
+            universityRepository.save(university);
+
+            return "Successfully deleted!";
+        }
+        else return "Wrong id or this university does not contain this student.";
     }
 }

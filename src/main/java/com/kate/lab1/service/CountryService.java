@@ -24,11 +24,10 @@ public class CountryService {
     private UniversityRepository universityRepository;
 
     public List<Country> getAllCountries() {
-        if(RequestCache.containsKey(ALL_COUNTRIES_REQUEST)) {
+        if (RequestCache.containsKey(ALL_COUNTRIES_REQUEST)) {
             LOGGER.info("Getting all countries from cache");
             return (List<Country>) RequestCache.get(ALL_COUNTRIES_REQUEST);
-        }
-        else {
+        } else {
             List<Country> countries = countryRepository.findAll();
             RequestCache.put(ALL_COUNTRIES_REQUEST, countries);
             LOGGER.info("Getting all countries from cache");
@@ -37,11 +36,10 @@ public class CountryService {
     }
 
     public Country getCountryById(Long id) {
-        if(RequestCache.containsKey(COUNTRY_BY_ID_REQUEST + id.toString())) {
+        if (RequestCache.containsKey(COUNTRY_BY_ID_REQUEST + id.toString())) {
             LOGGER.info("Getting country by id from cache");
-            return ((List<Country>)RequestCache.get(COUNTRY_BY_ID_REQUEST + id)).get(0);
-        }
-        else {
+            return ((List<Country>) RequestCache.get(COUNTRY_BY_ID_REQUEST + id)).get(0);
+        } else {
             Country country = countryRepository.findById(id).orElse(null);
             List<Country> countries = new ArrayList<>();
             countries.add(country);

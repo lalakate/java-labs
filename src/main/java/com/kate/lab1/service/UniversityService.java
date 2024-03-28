@@ -26,7 +26,7 @@ public class UniversityService {
     private static final Logger LOGGER = Logger.getLogger(UniversityService.class.getName());
 
     public List<University> getAllUniversities() {
-        if(RequestCache.containsKey(ALL_UNIVERSITIES_REQUEST)) {
+        if (RequestCache.containsKey(ALL_UNIVERSITIES_REQUEST)) {
             LOGGER.info("Getting all universities from cache");
             return (List<University>) RequestCache.get(ALL_UNIVERSITIES_REQUEST);
         }
@@ -37,11 +37,10 @@ public class UniversityService {
     }
 
     public University getUniversityById(Long id) {
-        if(RequestCache.containsKey(UNIVERSITY_BY_ID_REQUEST + id)) {
+        if (RequestCache.containsKey(UNIVERSITY_BY_ID_REQUEST + id)) {
             LOGGER.info("Getting university by id from cache");
-            return ((List<University>)RequestCache.get(UNIVERSITY_BY_ID_REQUEST + id)).get(0);
-        }
-        else {
+            return ((List<University>) RequestCache.get(UNIVERSITY_BY_ID_REQUEST + id)).get(0);
+        } else {
             University university = universityRepository.findById(id).orElse(null);
             List<University> universities = new ArrayList<>();
             universities.add(university);

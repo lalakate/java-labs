@@ -29,6 +29,7 @@ public class RequestCache {
         cache.clear();
     }
 
-    private RequestCache() {}
+    private RequestCache() {
+    }
 
 }

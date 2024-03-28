@@ -1,5 +1,6 @@
 package com.kate.lab1.service;
 
+import com.kate.lab1.cache.RequestCache;
 import com.kate.lab1.model.Country;
 import com.kate.lab1.model.University;
 import com.kate.lab1.repository.CountryRepository;
@@ -10,19 +11,44 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 @AllArgsConstructor
 public class CountryService {
+    private static final String ALL_COUNTRIES_REQUEST = "http://localhost:8080/api/v1/country/all";
+    private static final String COUNTRY_BY_ID_REQUEST = "http://localhost:8080/api/v1/country/";
+    private static final Logger LOGGER = Logger.getLogger(CountryService.class.getName());
+
     private CountryRepository countryRepository;
     private UniversityRepository universityRepository;
 
     public List<Country> getAllCountries() {
-        return countryRepository.findAll();
+        if(RequestCache.containsKey(ALL_COUNTRIES_REQUEST)) {
+            LOGGER.info("Getting all countries from cache");
+            return (List<Country>) RequestCache.get(ALL_COUNTRIES_REQUEST);
+        }
+        else {
+            List<Country> countries = countryRepository.findAll();
+            RequestCache.put(ALL_COUNTRIES_REQUEST, countries);
+            LOGGER.info("Getting all countries from cache");
+            return countries;
+        }
     }
 
     public Country getCountryById(Long id) {
-        return countryRepository.findById(id).orElse(null);
+        if(RequestCache.containsKey(COUNTRY_BY_ID_REQUEST + id.toString())) {
+            LOGGER.info("Getting country by id from cache");
+            return ((List<Country>)RequestCache.get(COUNTRY_BY_ID_REQUEST + id)).get(0);
+        }
+        else {
+            Country country = countryRepository.findById(id).orElse(null);
+            List<Country> countries = new ArrayList<>();
+            countries.add(country);
+            RequestCache.put(COUNTRY_BY_ID_REQUEST + id, countries);
+            LOGGER.info("Getting country by id from cache");
+            return country;
+        }
     }
 
     @Transactional
@@ -36,6 +62,9 @@ public class CountryService {
 
         universityRepository.saveAll(universityList);
 
+        RequestCache.clear();
+        LOGGER.info("Cache cleared in function createCountry");
+
         return "Successfully created!";
     }
 
@@ -45,10 +74,14 @@ public class CountryService {
             country.setName(countryName);
             countryRepository.save(country);
 
+            RequestCache.clear();
+            LOGGER.info("Cache cleared in function updateCountry");
+
             return "Successfully updated!";
         } else return "Wrong id!";
     }
 
+    @Transactional
     public String deleteCountry(Long id) {
         Country country = countryRepository.findById(id).orElse(null);
         if (country == null)
@@ -58,6 +91,10 @@ public class CountryService {
             List<University> universityList = new ArrayList<>(country.getUniversities());
             universityRepository.deleteAll(universityList);
             countryRepository.delete(country);
+
+            RequestCache.clear();
+            LOGGER.info("Cache cleared in function deleteCountry");
+
             return "Successfully deleted!";
         }
     }

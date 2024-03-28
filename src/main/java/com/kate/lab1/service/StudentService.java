@@ -1,5 +1,6 @@
 package com.kate.lab1.service;
 
+import com.kate.lab1.cache.RequestCache;
 import com.kate.lab1.model.Student;
 import com.kate.lab1.model.University;
 import com.kate.lab1.repository.StudentRepository;
@@ -9,19 +10,44 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 @AllArgsConstructor
 public class StudentService {
+    private static final String ALL_STUDENTS_REQUEST = "http://localhost:8080/api/v1/student/all";
+    private static final String STUDENT_BY_ID_REQUEST = "http://localhost:8080/api/v1/student/";
+
     private StudentRepository studentRepository;
     private UniversityRepository universityRepository;
 
+    private static final Logger LOGGER = Logger.getLogger(StudentService.class.getName());
+
     public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+        if (RequestCache.containsKey(ALL_STUDENTS_REQUEST)) {
+            LOGGER.info("Getting all students from cache");
+            return (List<Student>) RequestCache.get(ALL_STUDENTS_REQUEST);
+        } else {
+            List<Student> students = studentRepository.findAll();
+            RequestCache.put(ALL_STUDENTS_REQUEST, students);
+            LOGGER.info("Getting all students from database");
+            return students;
+        }
     }
 
     public Student getStudentById(Long id) {
-        return studentRepository.findById(id).orElse(null);
+        if (RequestCache.containsKey(STUDENT_BY_ID_REQUEST + id)) {
+            LOGGER.info("Getting student by id from cache");
+            return ((List<Student>) RequestCache.get(STUDENT_BY_ID_REQUEST + id)).get(0);
+        } else {
+            Student student = studentRepository.findById(id).orElse(null);
+            List<Student> students = new ArrayList<>();
+            students.add(student);
+
+            RequestCache.put(STUDENT_BY_ID_REQUEST + id, students);
+            LOGGER.info("Getting student by id from database");
+            return student;
+        }
     }
 
     public String createStudent(List<Long> universityIds, Student student) {
@@ -43,6 +69,8 @@ public class StudentService {
                 universityRepository.save(university);
             }
         }
+        RequestCache.clear();
+        LOGGER.info("Cache cleared in function createStudent");
         return "Successfully created!";
     }
 
@@ -54,6 +82,9 @@ public class StudentService {
             university.getStudents().add(student);
             studentRepository.save(student);
             universityRepository.save(university);
+
+            RequestCache.clear();
+            LOGGER.info("Cache cleared in function addUniversityToStudent");
 
             return "Successfully added!";
         } else return "Wrong id(it must have been university id or student id)!";
@@ -71,6 +102,10 @@ public class StudentService {
             newStudent.setSpecialization(student.getSpecialization());
             newStudent.setNumber(student.getNumber());
             studentRepository.save(newStudent);
+
+            RequestCache.clear();
+            LOGGER.info("Cache cleared in function updateStudent");
+
             return "Successfully updated!";
         }
     }
@@ -83,6 +118,9 @@ public class StudentService {
             university.getStudents().remove(student);
             studentRepository.save(student);
             universityRepository.save(university);
+
+            RequestCache.clear();
+            LOGGER.info("Cache cleared in function deleteUniversityFromStudent");
 
             return "Successfully deleted!";
         } else return "Wrong id (it must have been university id or student id)!";
@@ -98,6 +136,9 @@ public class StudentService {
                 university.getStudents().remove(student);
             }
             studentRepository.delete(student);
+
+            RequestCache.clear();
+            LOGGER.info("Cache cleared in function deleteStudent");
 
             return "Successfully deleted!";
         } else {

@@ -9,7 +9,12 @@ import java.util.Map;
 public class RequestCache {
     private static Map<String, Object> cache = new HashMap<>();
 
+    private static final int MAX_SIZE = 100;
+
     public static void put(String key, Object value) {
+        if(cache.size() == MAX_SIZE) {
+            clear();
+        }
         cache.put(key, value);
     }
 

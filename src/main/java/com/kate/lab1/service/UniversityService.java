@@ -2,6 +2,7 @@ package com.kate.lab1.service;
 
 import com.kate.lab1.aspect.Logging;
 import com.kate.lab1.cache.RequestCache;
+import com.kate.lab1.exception.BadRequestException;
 import com.kate.lab1.exception.NotFoundException;
 import com.kate.lab1.model.Country;
 import com.kate.lab1.model.Student;
@@ -31,6 +32,8 @@ public class UniversityService {
   private static final String UNIVERSITY_ERROR_MESSAGE = "There is no university with id = ";
   private static final String COUNTRY_ERROR_MESSAGE = "There is no country with id = ";
   private static final String STUDENT_ERROR_MESSAGE = "There is no student with id = ";
+
+  private static final String BAD_REQUEST_MESSAGE = "Bad request.";
 
   @Logging
   public List<University> getAllUniversities() {
@@ -146,10 +149,8 @@ public class UniversityService {
     University university = universityRepository.findById(universityId).orElse(null);
     Student student = studentRepository.findById(studentId).orElse(null);
 
-    if (university == null) {
-      throw new NotFoundException(UNIVERSITY_ERROR_MESSAGE, universityId);
-    } else if (student == null) {
-      throw new NotFoundException(STUDENT_ERROR_MESSAGE, studentId);
+    if (university == null || student == null) {
+      throw new BadRequestException(BAD_REQUEST_MESSAGE);
     }
 
     if (!university.getStudents().contains(student)) {

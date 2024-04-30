@@ -109,6 +109,10 @@ public class UniversityService {
     }
   }
 
+  public List<University> createUniversities(List<University> universities) {
+    return universities.stream().map(universityRepository::save).toList();
+  }
+
   @Logging
   public String updateUniversity(Long id, University university) {
     University newUniversity = universityRepository.findById(id).orElse(null);

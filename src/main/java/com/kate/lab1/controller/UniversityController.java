@@ -3,7 +3,9 @@ package com.kate.lab1.controller;
 import com.kate.lab1.model.University;
 import com.kate.lab1.service.UniversityService;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -34,6 +36,13 @@ public class UniversityController {
   @PostMapping("/create/{id}")
   public String createUniversity(@PathVariable Long id, @RequestBody University university) {
     return universityService.createUniversity(id, university);
+  }
+
+  @PostMapping("/create")
+  public ResponseEntity<List<University>> createUniversities(
+      @RequestBody List<University> universities) {
+    return ResponseEntity.of(
+        Optional.ofNullable(universityService.createUniversities(universities)));
   }
 
   @PutMapping("/update/{id}")

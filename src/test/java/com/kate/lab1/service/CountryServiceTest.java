@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import com.kate.lab1.model.Country;
 import com.kate.lab1.repository.CountryRepository;
+import com.kate.lab1.repository.UniversityRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +24,9 @@ class CountryServiceTest {
 
   @Mock
   CountryRepository countryRepository;
+
+  @Mock
+  UniversityRepository universityRepository;
 
   @InjectMocks
   CountryService countryService;

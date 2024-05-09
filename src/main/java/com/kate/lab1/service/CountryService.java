@@ -1,6 +1,6 @@
 package com.kate.lab1.service;
 
-import com.kate.lab1.aspect.Logging;
+import com.kate.lab1.aop.Logging;
 import com.kate.lab1.cache.RequestCache;
 import com.kate.lab1.exception.NotFoundException;
 import com.kate.lab1.model.Country;

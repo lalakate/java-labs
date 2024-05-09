@@ -1,4 +1,4 @@
-package com.kate.lab1.aspect;
+package com.kate.lab1.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Slf4j
 public class LoggingAspect {
-  @Pointcut("@annotation(com.kate.lab1.aspect.Logging)")
+  @Pointcut("@annotation(com.kate.lab1.aop.Logging)")
   private void serviceLogging() {
   }
 

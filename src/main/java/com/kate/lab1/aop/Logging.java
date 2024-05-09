@@ -1,4 +1,4 @@
-package com.kate.lab1.aspect;
+package com.kate.lab1.aop;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

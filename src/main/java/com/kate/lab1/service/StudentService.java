@@ -1,6 +1,6 @@
 package com.kate.lab1.service;
 
-import com.kate.lab1.aspect.Logging;
+import com.kate.lab1.aop.Logging;
 import com.kate.lab1.cache.RequestCache;
 import com.kate.lab1.exception.BadRequestException;
 import com.kate.lab1.exception.NotFoundException;

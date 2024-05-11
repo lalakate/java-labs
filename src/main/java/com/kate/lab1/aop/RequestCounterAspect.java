@@ -15,9 +15,11 @@ public class RequestCounterAspect {
     this.requestCounterService = requestCounterService;
   }
 
-  @Around("@within(com.kate.lab1.aop.RequestStats) ||" + "@annotation(com.kate.lab1.aop.RequestStats)")
+  @Around(
+      "@within(com.kate.lab1.aop.RequestStats) ||" + "@annotation(com.kate.lab1.aop.RequestStats)")
   public Object incrementRequestStats(ProceedingJoinPoint joinPoint) throws Throwable {
     requestCounterService.incrementRequestCount();
+
     return joinPoint.proceed();
   }
 }

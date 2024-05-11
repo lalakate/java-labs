@@ -13,11 +13,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.util.List;
-import lombok.Data;
 
 @Entity
 @Table(name = "universities")
-@Data
 public class University {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,4 +43,60 @@ public class University {
   @JoinTable(name = "university_student", joinColumns = @JoinColumn(name = "university_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
   @JsonIgnoreProperties(value = {"universities", "country", "students"})
   private List<Student> students;
+
+  public Long getId() {
+    return id;
+  }
+
+  public void setId(Long id) {
+    this.id = id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDomain() {
+    return domain;
+  }
+
+  public void setDomain(String domain) {
+    this.domain = domain;
+  }
+
+  public String getIndex() {
+    return index;
+  }
+
+  public void setIndex(String index) {
+    this.index = index;
+  }
+
+  public String getWebPage() {
+    return webPage;
+  }
+
+  public void setWebPage(String webPage) {
+    this.webPage = webPage;
+  }
+
+  public Country getCountry() {
+    return country;
+  }
+
+  public void setCountry(Country country) {
+    this.country = country;
+  }
+
+  public List<Student> getStudents() {
+    return students;
+  }
+
+  public void setStudents(List<Student> students) {
+    this.students = students;
+  }
 }

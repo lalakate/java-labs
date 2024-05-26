@@ -1,11 +1,13 @@
 package com.kate.lab1.controller;
 
+import com.kate.lab1.aop.RequestStats;
 import com.kate.lab1.model.University;
 import com.kate.lab1.service.UniversityService;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/university")
+@RequestStats
+@CrossOrigin(origins = "*")
 public class UniversityController {
   private final UniversityService universityService;
 
@@ -32,6 +36,11 @@ public class UniversityController {
   @GetMapping("/{id}")
   public University getUniversityById(@PathVariable Long id) {
     return universityService.getUniversityById(id);
+  }
+
+  @GetMapping("/in")
+  public List<University> getUniversitiesByCountryId(@RequestParam("countryId") Long id) {
+    return universityService.getUniversitiesByCountryId(id);
   }
 
   @PostMapping("/create/{id}")

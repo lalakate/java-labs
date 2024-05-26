@@ -9,6 +9,7 @@ import com.kate.lab1.model.University;
 import com.kate.lab1.repository.StudentRepository;
 import com.kate.lab1.repository.UniversityRepository;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -166,5 +167,11 @@ public class StudentService {
     } else {
       throw new NotFoundException(STUDENT_ERROR_MESSAGE, id);
     }
+  }
+
+  public List<Student> getStudentsByUniversityId(Long id) {
+    List<Student> students = studentRepository.findByUniversitiesId(id);
+    students.sort(Comparator.comparing(Student::getSurname));
+    return students;
   }
 }

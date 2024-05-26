@@ -11,6 +11,7 @@ import com.kate.lab1.repository.CountryRepository;
 import com.kate.lab1.repository.StudentRepository;
 import com.kate.lab1.repository.UniversityRepository;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -195,5 +196,12 @@ public class UniversityService {
     } else {
       return "Wrong id or this university does not contain this student.";
     }
+  }
+
+  @Logging
+  public List<University> getUniversitiesByCountryId(Long id) {
+    List<University> universities = universityRepository.getUniversitiesByCountryId(id);
+    universities.sort(Comparator.comparing(University::getName));
+    return universities;
   }
 }

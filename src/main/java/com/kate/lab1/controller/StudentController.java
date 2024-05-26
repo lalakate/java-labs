@@ -1,11 +1,14 @@
 package com.kate.lab1.controller;
 
+import com.kate.lab1.aop.RequestStats;
 import com.kate.lab1.model.Student;
 import com.kate.lab1.service.StudentService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RestController
 @RequestMapping("api/v1/student")
+@RequestStats
+@CrossOrigin(origins = "*")
 public class StudentController {
   private final StudentService studentService;
 
@@ -30,9 +35,14 @@ public class StudentController {
     return studentService.getStudentById(id);
   }
 
-  @PostMapping("/create")
+  @GetMapping("/in")
+  public List<Student> getStudentsByUniversityId(@RequestParam("universityId") Long id) {
+    return studentService.getStudentsByUniversityId(id);
+  }
+
+  @PostMapping(value = "/create" ,consumes = { "multipart/form-data" })
   public String createStudent(@RequestParam(required = false) List<Long> universityIds,
-                              @RequestBody Student student) {
+                              @ModelAttribute Student student) {
     return studentService.createStudent(universityIds, student);
   }
 

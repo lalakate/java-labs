@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,14 +39,14 @@ public class StudentController {
     return studentService.getStudentsByUniversityId(id);
   }
 
-  @PostMapping(value = "/create" ,consumes = { "multipart/form-data" })
+  @PostMapping(value = "/create", consumes = {"multipart/form-data"})
   public String createStudent(@RequestParam(required = false) List<Long> universityIds,
                               @ModelAttribute Student student) {
     return studentService.createStudent(universityIds, student);
   }
 
-  @PatchMapping("/update/{id}")
-  public String updateStudent(@PathVariable Long id, @RequestBody Student student) {
+  @PatchMapping(value = "/update/{id}", consumes = {"multipart/form-data"})
+  public String updateStudent(@PathVariable Long id, @ModelAttribute Student student) {
     return studentService.updateStudent(id, student);
   }
 

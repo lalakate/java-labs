@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class CountryService {
   private static final String ALL_COUNTRIES_REQUEST = "http://localhost:8080/api/v1/country/all";

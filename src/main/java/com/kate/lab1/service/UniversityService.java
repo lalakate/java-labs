@@ -10,6 +10,7 @@ import com.kate.lab1.model.University;
 import com.kate.lab1.repository.CountryRepository;
 import com.kate.lab1.repository.StudentRepository;
 import com.kate.lab1.repository.UniversityRepository;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -20,6 +21,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class UniversityService {
   private static final String ALL_UNIVERSITIES_REQUEST =

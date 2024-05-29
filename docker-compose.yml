@@ -2,12 +2,14 @@ version: "3"
 
 services:
   frontend:
-    image: frontend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: java-labs-front
     ports:
-      - 5173:5173
+      - "5174:5173"
   app:
     build:
-      dockerfile: ./Dockerfile
       context: .
     container_name: app
     depends_on:
@@ -15,11 +17,16 @@ services:
     environment:
       SPRING_DB_URL: postgresql://db:5432/java
     ports:
-      - 8080:8080
+      - "8080:8080"
 
   db:
-    image: postgres:16-alpine
+    image: postgres:14-alpine
     container_name: db
     environment:
       POSTGRES_DB: java
       POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+volumes:
+  dbdata:

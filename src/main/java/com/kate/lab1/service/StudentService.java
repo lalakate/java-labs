@@ -8,6 +8,7 @@ import com.kate.lab1.model.Student;
 import com.kate.lab1.model.University;
 import com.kate.lab1.repository.StudentRepository;
 import com.kate.lab1.repository.UniversityRepository;
+import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -15,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class StudentService {
   private static final String ALL_STUDENTS_REQUEST = "http://localhost:8080/api/v1/student/all";

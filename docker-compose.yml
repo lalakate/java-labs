@@ -1,13 +1,16 @@
 version: "3"
 
+networks:
+  default: {}
+
 services:
   frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
     image: java-labs-front
     ports:
       - "5174:5173"
+    networks:
+      - default
+
   app:
     build:
       context: .
@@ -27,6 +30,8 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - dbdata:/var/lib/postgresql/data
+    networks:
+      - default
 
 volumes:
   dbdata:
